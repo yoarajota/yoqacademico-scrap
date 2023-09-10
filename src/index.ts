@@ -3,13 +3,19 @@ import ClassQACademico from "./ClientQAcademico";
 import { DiarioDataSelector, HomePageSelector } from "./selectors";
 import { Data, PartDiario } from "./types";
 import { normalize } from "./helpers";
+import cors from "cors";
 const app = express();
 const route = Router();
-
 app.use(express.json());
+app.use(
+  cors({
+    origin: process.env.FRONT,
+  })
+);
 
 route.post("/", async (req: Request, res: Response) => {
   let launch = new ClassQACademico();
+  await launch.initialize();
 
   try {
     const { username, password } = req.body;
@@ -18,7 +24,6 @@ route.post("/", async (req: Request, res: Response) => {
       throw new Error("Invalid credentials!");
     }
 
-    await launch.initialize();
     await launch.goto(
       "https://qacademico.bento.ifrs.edu.br/qacademico/index.asp?t=1001"
     );
