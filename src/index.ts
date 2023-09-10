@@ -4,20 +4,24 @@ import { DiarioDataSelector, HomePageSelector } from "./selectors";
 import { Data, PartDiario } from "./types";
 import { normalize } from "./helpers";
 import cors from "cors";
+import bodyParser from "body-parser";
+import dotenv from "dotenv";
+dotenv.config();
 const app = express();
 const route = Router();
-app.use(express.json());
 app.use(
   cors({
     origin: process.env.FRONT,
   })
 );
+app.use(bodyParser.json());
 
 route.post("/", async (req: Request, res: Response) => {
   let launch = new ClassQACademico();
   await launch.initialize();
 
   try {
+    console.log(req.body);
     const { username, password } = req.body;
 
     if (!username || !password) {
